@@ -1,0 +1,2 @@
+# marubat-game
+マルバツゲーム
