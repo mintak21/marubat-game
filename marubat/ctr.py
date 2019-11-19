@@ -1,0 +1,77 @@
+# coding: utf-8
+from .logics import is_bingo
+from .logics import bingo_sets
+from .logics import mark_filtered_coordinates
+from .models import Player
+from .models import Mark
+
+class GameController:
+    """進行者
+
+    Attributes
+    ------------------------
+    board : list
+        ゲームマス(2次元正方行列)
+    players : list()
+        プレイヤー(2人)
+
+    bingo_sets_cache : set
+        ビンゴ可能性座標セット(boardが変わらない限り一緒なのでビンゴ判定キャッシュとして利用)
+    turn_player_point : int
+        現在のプレイヤーの場所 ポーカー等のボタンのイメージ
+    """
+
+    def __init__(self, board, players):
+        self._board = board
+        self._bingo_sets_cache = bingo_sets(self._board)
+        self._players = players
+        self._turn_player_point = 0
+
+    def game(self):
+        """ゲームを進行する。
+
+        1. ターンプレイヤーにうめる座標を選択させる。
+        2. 1のマスにマークを書く。
+        3. 終了判定をする。(ビンゴor空きマスなし)
+         - 終了条件をみたせば、勝者を宣言してEnd
+        4. ターンプレイヤーをスイッチして1に戻る。
+        """
+        while True:
+            li = '|'.join([str(v) if k[0] != 2 else str(v) + '|\n' \
+                for k,v in self._board.items()])
+            print('|' + li.rstrip())
+
+            # 1
+            selectables = mark_filtered_coordinates(self._board, Mark.NONE)
+            select_coordinate = self._turn_player().select_point(selectables)
+
+            # 2
+            self._fill_in(select_coordinate[0], select_coordinate[1], self._turn_player().mark)
+
+            # 3
+            if (self._end_game()):
+                break
+            # 4
+            self._switch_player()
+        else:
+            print(self._turn_player(), 'の勝ち')
+
+    def _end_game(self):
+        """終了判定
+        ビンゴ成立 or ブランクマスがない
+        """
+        return is_bingo(self._board, self._turn_player().mark, self._bingo_sets_cache) \
+            or len(mark_filtered_coordinates(self._board, Mark.NONE)) == 0
+
+    def _fill_in(self, x, y, mark):
+        if self._board[x,y] == Mark.NONE:
+            self._board[x,y] = mark
+        else:
+            print('Error') # ロジック上、来ないと思うけれど
+            return
+
+    def _switch_player(self):
+        self._turn_player_point = (self._turn_player_point + 1) % len(self._players)
+
+    def _turn_player(self):
+        return self._players[self._turn_player_point]
