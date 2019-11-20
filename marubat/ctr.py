@@ -4,6 +4,7 @@ from .logics import bingo_sets
 from .logics import mark_filtered_coordinates
 from .models import Player
 from .models import Mark
+from .io import display
 
 class GameController:
     """進行者
@@ -19,6 +20,8 @@ class GameController:
         ビンゴ可能性座標セット(boardが変わらない限り一緒なのでビンゴ判定キャッシュとして利用)
     turn_player_point : int
         現在のプレイヤーの場所 ポーカー等のボタンのイメージ
+    winner : Player
+        勝者。ビンゴ判定されたときに設定される
     """
 
     def __init__(self, board, players):
@@ -26,6 +29,7 @@ class GameController:
         self._bingo_sets_cache = bingo_sets(self._board)
         self._players = players
         self._turn_player_point = 0
+        self._winner = None
 
     def game(self):
         """ゲームを進行する。
@@ -53,21 +57,26 @@ class GameController:
                 break
             # 4
             self._switch_player()
-        else:
-            print(self._turn_player(), 'の勝ち')
+
+        disp_sentence = self._turn_player().name + 'の勝ち' if self._winner else '引き分け'
+        display(disp_sentence)
 
     def _end_game(self):
         """終了判定
         ビンゴ成立 or ブランクマスがない
         """
-        return is_bingo(self._board, self._turn_player().mark, self._bingo_sets_cache) \
-            or len(mark_filtered_coordinates(self._board, Mark.NONE)) == 0
+        if len(mark_filtered_coordinates(self._board, Mark.NONE)) == 0:
+            return True
+        if is_bingo(self._board, self._turn_player().mark, self._bingo_sets_cache):
+            self._winner = self._turn_player
+            return True
+        return False
 
     def _fill_in(self, x, y, mark):
         if self._board[x,y] == Mark.NONE:
             self._board[x,y] = mark
         else:
-            print('Error') # ロジック上、来ないと思うけれど
+            print('Error') # TODO ロジック上、来ないと思うけれど
             return
 
     def _switch_player(self):

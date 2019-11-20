@@ -41,7 +41,3 @@ class Mark(Enum):
 
     def __str__(self):
         return self.value
-
-    # TODO あとで消す
-    def __repr__(self):
-        return self.value

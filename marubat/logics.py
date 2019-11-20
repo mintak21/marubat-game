@@ -18,12 +18,11 @@ def is_bingo(board, target_mark, cached_bingo_set = None):
     bool
         ビンゴであればTrue、そうでなければFalse
     """
-    target_mark_coordinates = mark_filtered_coordinates(board, target_mark)
+    target_mark_coordinates = set(mark_filtered_coordinates(board, target_mark))
     bingo_set_list = bingo_sets(board) if cached_bingo_set else cached_bingo_set
     for bingo_set in bingo_set_list:
         if target_mark_coordinates == bingo_set:
             return True
-
     return False
 
 def mark_filtered_coordinates(board, target_mark, how_to= 'y_x'):
