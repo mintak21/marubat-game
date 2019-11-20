@@ -8,8 +8,8 @@ def is_bingo(board, target_mark, cached_bingo_set = None):
     """引数のboardで、ビンゴ成立しているかを判定
     Params
     -----------------
-    board : list(Mark)
-        判定対象ボード(2次元正方行列)
+    board : dict
+        判定対象ボード(座標:値の辞書、2次元正方行列)
     target_mark : Mark
         判定するマーク
 
@@ -18,32 +18,41 @@ def is_bingo(board, target_mark, cached_bingo_set = None):
     bool
         ビンゴであればTrue、そうでなければFalse
     """
-    target_mark_coordinates = mark_filtered_coordinates(board, target_mark)
+    target_mark_coordinates = set(mark_filtered_coordinates(board, target_mark))
     bingo_set_list = bingo_sets(board) if cached_bingo_set else cached_bingo_set
     for bingo_set in bingo_set_list:
         if target_mark_coordinates == bingo_set:
             return True
-
     return False
 
-def mark_filtered_coordinates(board, target_mark):
+def mark_filtered_coordinates(board, target_mark, how_to= 'y_x'):
     """
 
     Params
     -----------------
-    board : list(Mark)
-        判定対象ボード(2次元正方行列)
+    board : dict
+        判定対象ボード(座標:値の辞書、2次元正方行列)
     target_mark : Mark
         判定するマーク
+    how_to : string (default=x_y)
+        ソート方法
+        x_y -> x方向のあとy方向 [(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2), (2, 0)...]
+        y_x -> y方向のあとx方向 [(0, 0), (1, 0), (2, 0), (0, 1), (1, 1), (2, 1), (0, 2)...]
 
     Returns
     -----------------
     list
-        判定マークの入っている座標セット
+        判定マークの入っている座標リスト
     """
-    return {
+    target_coordinates = [
         coordinate for coordinate, mark in board.items() if mark == target_mark
-    }
+    ]
+    if how_to == 'x_y':
+        return sorted(target_coordinates, key=lambda v : v[0])
+    elif how_to == 'y_x':
+        return sorted(target_coordinates, key=lambda v : v[1])
+    else:
+        return sorted(target_coordinates) #default sort
 
 def bingo_sets(board):
     """ビンゴとなる座標セットを取得
@@ -54,8 +63,8 @@ def bingo_sets(board):
     ]
     Params
     -----------------
-    board : list(Mark)
-        判定対象ボード(2次元正方行列)
+    board : dict
+        判定対象ボード(座標:値の辞書、2次元正方行列)
 
     Returns
     -----------------
@@ -75,30 +84,6 @@ def bingo_sets(board):
     result.append({(k, k) for k in range(board_size)})
 
     return result
-
-def _sorted_coordinates(board, how_to = 'x_y', reverse = False):
-    """座標リストを取得
-
-    Params
-    -----------------
-    board : list(Mark)
-        対象ボード(2次元正方行列)
-    how_to : string
-        ソート方法
-        x_y -> x方向のあとy方向 [(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2), (2, 0)...]
-        y_x -> y方向のあとx方向 [(0, 0), (1, 0), (2, 0), (0, 1), (1, 1), (2, 1), (0, 2)...]
-
-    Returns
-    -----------------
-    list
-        座標セット
-    """
-    if how_to == 'x_y':
-        return sorted(board.keys(), key=lambda v : v[0])
-    elif how_to == 'y_x':
-        return sorted(board.keys(), key=lambda v : v[1])
-    else:
-        return sorted(board.keys()) #default sort
 
 def _board_size(board):
     return int(sqrt(len(board)))

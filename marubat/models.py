@@ -6,6 +6,8 @@ from .io import select_by_options
 class Player:
     """ゲームプレイヤー
     """
+    _ask_sentence_fmt = '{name}さん({mark})のターンです。書き込む座標の番号を入力してください。((x,y)形式の座標)'
+
     def __init__(self, name , mark):
         self._name = name
         self._mark = mark
@@ -32,7 +34,8 @@ class Player:
         int,int
             選択した座標
         """
-        return select_by_options(selectable)
+        ask_sentence = Player._ask_sentence_fmt.format(name = self._name, mark = self._mark)
+        return select_by_options(selectable, ask_sentence, sort=False)
 
 class Mark(Enum):
     MARU  = '○'
@@ -40,8 +43,4 @@ class Mark(Enum):
     NONE  = '-'
 
     def __str__(self):
-        return self.value
-
-    # TODO あとで消す
-    def __repr__(self):
         return self.value
