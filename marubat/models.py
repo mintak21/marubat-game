@@ -32,7 +32,7 @@ class Player:
         int,int
             選択した座標
         """
-        return select_by_options(selectable)
+        return select_by_options(selectable, sort=False)
 
 class Mark(Enum):
     MARU  = '○'
