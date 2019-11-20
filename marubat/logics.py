@@ -8,8 +8,8 @@ def is_bingo(board, target_mark, cached_bingo_set = None):
     """引数のboardで、ビンゴ成立しているかを判定
     Params
     -----------------
-    board : list(Mark)
-        判定対象ボード(2次元正方行列)
+    board : dict
+        判定対象ボード(座標:値の辞書、2次元正方行列)
     target_mark : Mark
         判定するマーク
 
@@ -30,8 +30,8 @@ def mark_filtered_coordinates(board, target_mark, how_to= 'y_x'):
 
     Params
     -----------------
-    board : list(Mark)
-        判定対象ボード(2次元正方行列)
+    board : dict
+        判定対象ボード(座標:値の辞書、2次元正方行列)
     target_mark : Mark
         判定するマーク
     how_to : string (default=x_y)
@@ -63,8 +63,8 @@ def bingo_sets(board):
     ]
     Params
     -----------------
-    board : list(Mark)
-        判定対象ボード(2次元正方行列)
+    board : dict
+        判定対象ボード(座標:値の辞書、2次元正方行列)
 
     Returns
     -----------------

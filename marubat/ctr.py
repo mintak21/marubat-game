@@ -11,8 +11,8 @@ class GameController:
 
     Attributes
     ------------------------
-    board : list
-        ゲームマス(2次元正方行列)
+    board : dict
+        ゲームマス(座標:値の辞書、2次元正方行列)
     players : list()
         プレイヤー(2人)
 
