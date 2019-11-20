@@ -5,6 +5,7 @@ from .logics import mark_filtered_coordinates
 from .models import Player
 from .models import Mark
 from .io import display
+from .io import display_board as disp_b
 
 class GameController:
     """進行者
@@ -41,9 +42,7 @@ class GameController:
         4. ターンプレイヤーをスイッチして1に戻る。
         """
         while True:
-            li = '|'.join([str(v) if k[0] != 2 else str(v) + '|\n' \
-                for k,v in self._board.items()])
-            print('|' + li.rstrip())
+            disp_b(self._board)
 
             # 1
             selectables = mark_filtered_coordinates(self._board, Mark.NONE)
@@ -58,12 +57,14 @@ class GameController:
             # 4
             self._switch_player()
 
-        disp_sentence = self._turn_player().name + 'の勝ち' if self._winner else '引き分け'
-        display(disp_sentence)
+        # 結果表示
+        disp_b(self._board)
+        display(self._turn_player().name + 'の勝ち' if self._winner else '引き分け')
 
     def _end_game(self):
         """終了判定
         ビンゴ成立 or ブランクマスがない
+        ビンゴ成立の場合は、勝者も設定
         """
         if len(mark_filtered_coordinates(self._board, Mark.NONE)) == 0:
             return True
