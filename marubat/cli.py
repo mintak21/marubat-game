@@ -5,7 +5,6 @@ from .models import Player
 from .models import Mark
 
 def main():
-    print('はい')
     board_size = 3
     board = {(x,y):Mark.NONE for y in range(board_size) for x in range(board_size)}
     player_1 = Player('player1', Mark.MARU)
