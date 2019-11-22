@@ -57,8 +57,8 @@ def mark_filtered_coordinates(board, target_mark, how_to= 'row'):
 def bingo_sets(board):
     """ビンゴとなる座標セットを取得
     ex. 3*3 n=3の場合
-    result =[{(0,0),(1,0),(2,0)},{(0,1),(1,1),(2,1)},{(0,2),(1,2),(2,2)}, たて
-             {(0,0),(0,1),(0,2)},{(1,0),(1,1),(1,2)},{(2,0),(2,1),(2,2)}, よこ
+    result =[{(0,0),(0,1),(0,2)},{(1,0),(1,1),(1,2)},{(2,0),(2,1),(2,2)}, よこ
+             {(0,0),(1,0),(2,0)},{(0,1),(1,1),(2,1)},{(0,2),(1,2),(2,2)}, たて
              {(0,2),(1,1),(2,0)}, ななめ(右上方向)
              {(0,0),(1,1),(2,2)}, ななめ(右下方向)
     ]
@@ -74,12 +74,12 @@ def bingo_sets(board):
     """
     result = list()
     board_size = _board_size(board)
-    # たて
-    for x in range(board_size):
-        result.append({(x, y) for y in range(board_size)})
     # よこ
-    for y in range(board_size):
-        result.append({(x, y) for x in range(board_size)})
+    for w in range(board_size):
+        result.append({(h, w) for h in range(board_size)})
+    # たて
+    for h in range(board_size):
+        result.append({(h, w) for w in range(board_size)})
     # ななめ(右上)
     result.append({(k, board_size-(k+1)) for k in range(board_size)})
     # ななめ(右下)
