@@ -6,7 +6,7 @@ from .io import select_by_options
 class Player:
     """ゲームプレイヤー
     """
-    _ask_sentence_fmt = '{name}さん({mark})のターンです。書き込む座標の番号を入力してください。((x,y)形式の座標)'
+    _ask_sentence_fmt = '{name}さん({mark})のターンです。書込座標の番号を入力せよ。(縦方向ポイント,横方向ポイント)、左上マス=(0,0)'
 
     def __init__(self, name , mark):
         self._name = name
