@@ -73,9 +73,9 @@ class GameController:
             return True
         return False
 
-    def _fill_in(self, x, y, mark):
-        if self._board[x,y] == Mark.NONE:
-            self._board[x,y] = mark
+    def _fill_in(self, h, w, mark):
+        if self._board[h,w] == Mark.NONE:
+            self._board[h,w] = mark
         else:
             print('Error') # TODO ロジック上、来ないと思うけれど
             return

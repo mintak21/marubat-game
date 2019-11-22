@@ -42,9 +42,9 @@ def display_board(board, separator = '|'):
     separator : string
         区切り文字 default = |
     """
-    result = separator.join([str(v) if k[0] != int(sqrt(len(board))) - 1 else \
+    joined_str = separator.join([str(v) if k[1] != int(sqrt(len(board))) - 1 else \
                             str(v) + '|' + os.linesep for k,v in board.items()])
-    display('【ボード】', '|' + result.rstrip())
+    display('【ボード】', '|' + joined_str.rstrip())
 
 def display(*disp_sentence):
     """受け取ったものをそのまま標準出力。
